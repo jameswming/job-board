@@ -28,11 +28,9 @@
       <mat-form-field>
         <mat-label>Distance (miles)</mat-label>
         <mat-select formControlName="distance">
-          <mat-option [value]="10">10 miles</mat-option>
-          <mat-option [value]="20">20 miles</mat-option>
-          <mat-option [value]="50">50 miles</mat-option>
-          <mat-option [value]="100">100 miles</mat-option>
-          <mat-option [value]="500">100-500 miles</mat-option>
+          <mat-option *ngFor="let option of distances" [value]="option.value">
+            {{ option.label }}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 

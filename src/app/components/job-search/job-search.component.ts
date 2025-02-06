@@ -31,6 +31,15 @@ export class JobSearchComponent {
   jobs: Job[] = [];
   loading = false;
 
+  distances = [
+    { value: 10, label: '10 miles' },
+    { value: 20, label: '20 miles' },
+    { value: 50, label: '50 miles' },
+    { value: 100, label: '100 miles' },
+    { value: 500, label: '500 miles' },
+    { value: Infinity, label: 'All Jobs' }
+  ];
+
   constructor(
     private fb: FormBuilder,
     private supabaseService: SupabaseService

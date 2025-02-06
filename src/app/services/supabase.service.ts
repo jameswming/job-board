@@ -72,7 +72,14 @@ export class SupabaseService {
         distance: this.calculateDistance(latitude, longitude, job.latitude, job.longitude)
       }));
 
-      return jobsWithDistance.filter(job => job.distance <= (distance || Infinity));
+      // 如果选择了 "All Jobs"，返回所有工作并按距离排序
+      if (distance === Infinity) {
+        return jobsWithDistance.sort((a, b) => a.distance - b.distance);
+      }
+
+      return jobsWithDistance
+        .filter(job => job.distance <= (distance || Infinity))
+        .sort((a, b) => a.distance - b.distance);
     }
     
     // If using city/state/zip, convert to coordinates first
@@ -84,7 +91,14 @@ export class SupabaseService {
           distance: this.calculateDistance(coords.latitude, coords.longitude, job.latitude, job.longitude)
         }));
 
-        return jobsWithDistance.filter(job => job.distance <= (distance || Infinity));
+        // 如果选择了 "All Jobs"，返回所有工作并按距离排序
+        if (distance === Infinity) {
+          return jobsWithDistance.sort((a, b) => a.distance - b.distance);
+        }
+
+        return jobsWithDistance
+          .filter(job => job.distance <= (distance || Infinity))
+          .sort((a, b) => a.distance - b.distance);
       } catch (error) {
         console.error('Error getting coordinates:', error);
         return [];
