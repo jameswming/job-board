@@ -8,6 +8,10 @@ on:
   pull_request:
     branches: [ main ]    # 当有 PR 请求合并到 main 分支时触发
 
+# 添加权限配置
+permissions:
+  contents: write
+
 # 定义具体的工作任务
 jobs:
   build-and-deploy:    # 改名以反映新增的部署功能
@@ -16,6 +20,8 @@ jobs:
     steps:                # 具体的执行步骤
     # 第一步：检出代码
     - uses: actions/checkout@v3   # 获取仓库的代码
+      with:
+        persist-credentials: false
 
     # 第二步：设置 Node.js 环境
     - name: Setup Node.js
@@ -36,16 +42,9 @@ jobs:
         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
         SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
 
-    # 新增：部署到 GitHub Pages
+    # 只保留一个部署步骤
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        folder: dist/job-board    # 修改为正确的构建输出目录
-        branch: gh-pages
-
-    # 新增：部署到 GitHub Pages
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: dist/job-board/browser    # Angular 构建输出目录
+        folder: dist/job-board/browser    # 使用正确的 Angular 输出路径
         branch: gh-pages                  # 部署的目标分支 
