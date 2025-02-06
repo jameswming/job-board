@@ -1,0 +1,69 @@
+<div class="job-search-container">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+    <div class="search-filters">
+      <mat-form-field>
+        <mat-label>City *</mat-label>
+        <input matInput formControlName="city">
+        <mat-error *ngIf="!searchForm.get('useCurrentLocation')?.value && searchForm.get('city')?.errors?.['required']">
+          City is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>State *</mat-label>
+        <input matInput formControlName="state">
+        <mat-error *ngIf="!searchForm.get('useCurrentLocation')?.value && searchForm.get('state')?.errors?.['required']">
+          State is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Zip Code *</mat-label>
+        <input matInput formControlName="zipCode">
+        <mat-error *ngIf="!searchForm.get('useCurrentLocation')?.value && searchForm.get('zipCode')?.errors?.['required']">
+          Zip Code is required
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Distance (miles)</mat-label>
+        <mat-select formControlName="distance">
+          <mat-option [value]="10">10 miles</mat-option>
+          <mat-option [value]="20">20 miles</mat-option>
+          <mat-option [value]="50">50 miles</mat-option>
+          <mat-option [value]="100">100 miles</mat-option>
+          <mat-option [value]="500">100-500 miles</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="useCurrentLocation">
+        Use my current location instead
+      </mat-checkbox>
+
+      <button mat-raised-button color="primary" type="submit" 
+              [disabled]="loading || (!searchForm.valid && !searchForm.get('useCurrentLocation')?.value)">
+        {{ loading ? 'Searching...' : 'Search Jobs' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="job-results" *ngIf="jobs.length > 0">
+    <mat-card *ngFor="let job of jobs" class="job-card">
+      <mat-card-header>
+        <mat-card-title>{{ job.title }}</mat-card-title>
+        <mat-card-subtitle>{{ job.company }}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ job.description }}</p>
+        <p>Location: {{ job.city }}, {{ job.state }} {{ job.zip_code }}</p>
+        <p *ngIf="job.distance !== undefined">
+          Distance: {{ job.distance }} miles away
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="jobs.length === 0" class="no-results">
+    No jobs found matching your criteria.
+  </div>
+</div> 

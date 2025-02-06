@@ -1,0 +1,20 @@
+.job-post-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 0;
+
+    mat-form-field {
+      width: 100%;
+    }
+
+    button {
+      align-self: flex-start;
+    }
+  }
+} 

@@ -1,0 +1,63 @@
+<div class="job-post-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Post a New Job</mat-card-title>
+    </mat-card-header>
+    
+    <mat-card-content>
+      <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Job Title</mat-label>
+          <input matInput formControlName="title" required>
+          <mat-error *ngIf="jobForm.get('title')?.errors?.['required']">
+            Job title is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input matInput formControlName="company" required>
+          <mat-error *ngIf="jobForm.get('company')?.errors?.['required']">
+            Company name is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Job Description</mat-label>
+          <textarea matInput formControlName="description" rows="5" required></textarea>
+          <mat-error *ngIf="jobForm.get('description')?.errors?.['required']">
+            Job description is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" required>
+          <mat-error *ngIf="jobForm.get('city')?.errors?.['required']">
+            City is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <input matInput formControlName="state" required>
+          <mat-error *ngIf="jobForm.get('state')?.errors?.['required']">
+            State is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Zip Code</mat-label>
+          <input matInput formControlName="zipCode" required>
+          <mat-error *ngIf="jobForm.get('zipCode')?.errors?.['required']">
+            Zip code is required
+          </mat-error>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+          {{ loading ? 'Posting...' : 'Post Job' }}
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div> 

@@ -1,0 +1,37 @@
+# 定义流水线的名称
+name: CI/CD Pipeline
+
+# 定义什么时候触发这个流水线
+on:
+  push:
+    branches: [ main ]    # 当代码推送到 main 分支时触发
+  pull_request:
+    branches: [ main ]    # 当有 PR 请求合并到 main 分支时触发
+
+# 定义具体的工作任务
+jobs:
+  build:                  # 构建任务
+    runs-on: ubuntu-latest    # 在 Ubuntu 最新版本的环境中运行
+
+    steps:                # 具体的执行步骤
+    # 第一步：检出代码
+    - uses: actions/checkout@v3   # 获取仓库的代码
+
+    # 第二步：设置 Node.js 环境
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'      # 使用 Node.js 20.x 版本
+        cache: 'npm'              # 启用 npm 缓存，提高构建速度
+
+    # 第三步：安装项目依赖
+    - name: Install Dependencies
+      run: npm ci                 # 使用 clean install，确保依赖版本一致
+
+    # 第四步：构建项目
+    - name: Build
+      run: npm run build         # 运行构建命令
+      env:                       # 设置环境变量
+        # 从 GitHub Secrets 中获取 Supabase 的配置信息
+        SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+        SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }} 
