@@ -55,8 +55,9 @@ export class SupabaseService {
     city?: string;
     state?: string;
     zipCode?: string;
+    keyword?: string;
   }) {
-    const { latitude, longitude, distance, city, state, zipCode } = searchParams;
+    const { latitude, longitude, distance, city, state, zipCode, keyword } = searchParams;
     
     // Get all jobs first
     const { data: allJobs, error } = await this.supabase
@@ -65,14 +66,24 @@ export class SupabaseService {
     
     if (error) throw error;
 
+    // 如果有关键词，先按关键词过滤
+    let filteredJobs = allJobs;
+    if (keyword && keyword.trim()) {
+      const searchTerm = keyword.toLowerCase().trim();
+      filteredJobs = allJobs.filter((job: Job) => 
+        job.title.toLowerCase().includes(searchTerm) ||
+        job.company.toLowerCase().includes(searchTerm) ||
+        job.description.toLowerCase().includes(searchTerm)
+      );
+    }
+
     // If using direct coordinates (from current location)
     if (latitude && longitude) {
-      const jobsWithDistance = allJobs.map((job: Job) => ({
+      const jobsWithDistance = filteredJobs.map((job: Job) => ({
         ...job,
         distance: this.calculateDistance(latitude, longitude, job.latitude, job.longitude)
       }));
 
-      // 如果选择了 "All Jobs"，返回所有工作并按距离排序
       if (distance === Infinity) {
         return jobsWithDistance.sort((a, b) => a.distance - b.distance);
       }
@@ -86,12 +97,11 @@ export class SupabaseService {
     if (city && state && zipCode) {
       try {
         const coords = await this.getCoordinates(city, state, zipCode);
-        const jobsWithDistance = allJobs.map((job: Job) => ({
+        const jobsWithDistance = filteredJobs.map((job: Job) => ({
           ...job,
           distance: this.calculateDistance(coords.latitude, coords.longitude, job.latitude, job.longitude)
         }));
 
-        // 如果选择了 "All Jobs"，返回所有工作并按距离排序
         if (distance === Infinity) {
           return jobsWithDistance.sort((a, b) => a.distance - b.distance);
         }
@@ -105,7 +115,7 @@ export class SupabaseService {
       }
     }
 
-    return allJobs;
+    return filteredJobs;  // 返回按关键词过滤的结果
   }
 
   async createJob(jobData: {

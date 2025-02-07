@@ -45,6 +45,7 @@ export class JobSearchComponent {
     private supabaseService: SupabaseService
   ) {
     this.searchForm = this.fb.group({
+      keyword: [''],
       city: ['', [Validators.required]],
       state: ['', [Validators.required]],
       zipCode: ['', [Validators.required]],
@@ -84,6 +85,7 @@ export class JobSearchComponent {
       const formValues = this.searchForm.value;
       
       let searchParams: any = {
+        keyword: formValues.keyword,
         city: formValues.city,
         state: formValues.state,
         zipCode: formValues.zipCode,
